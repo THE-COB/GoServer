@@ -2,15 +2,26 @@ package main
 
 import(
 	"fmt";
-	"net/http"
+	"net/http";
 )
 
-func sayHi(w http.ResponseWriter, r *http.Request){
-	fmt.Fprintf(w,"<h1>Hi</h1>")
+var text string
+func speak(w http.ResponseWriter, r *http.Request){
+	fmt.Fprintf(w, text)
+}
+
+func send(w http.ResponseWriter, r *http.Request){
+	if(r.Method == "POST"){
+		r.ParseForm()
+		message := r.PostFormValue("message")
+		text = message
+	}
 }
 
 func main() {
-	fmt.Println("Hello world")
-	http.HandleFunc("/", sayHi)
+	text = "Welcome to Chat on the Go!"
+	http.HandleFunc("/", speak)
+	http.HandleFunc("/send", send)
+	fmt.Println("Everything is working and ready...")
 	http.ListenAndServe(":8080", nil)
 }
