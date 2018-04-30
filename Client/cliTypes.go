@@ -11,5 +11,6 @@ type Message struct{
 }
 
 type Person struct{
-	Name, Id string
+	Name string
+	Id [32]byte
 }

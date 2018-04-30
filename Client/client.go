@@ -16,18 +16,21 @@ import(
 )
 
 func getPerson() Person{
-	if _, err := os.Stat("./user.info"); !os.IsNotExist(err){
+	_,noFile := os.Stat("./user.info")
+	fmt.Println(noFile)
+	if noFile != nil{
 		newFile,err := os.Create("./user.info")
-		
+		newFile=newFile
+		fmt.Println(err)
 		fmt.Println("It seems that you don't exist yet\nWhat is your name?")
 		reader := bufio.NewReader(os.Stdin)
 		name,_ := reader.ReadString('\n')
-		ourBoi := Person{name, Sum256(name+string(rand.Intn(100)))}
+		ourBoi := Person{name, sha256.Sum256([]byte(name+string(rand.Intn(100))))}
 
-		err := ioutil.WriteFile("./user.info", encPerson(ourBoi),'\n')
+		err = ioutil.WriteFile("./user.info", encPerson(ourBoi),'\n')
 	}
 	encBoi,err := ioutil.ReadFile("./user.info")
-
+	err=err
 	return decPerson(encBoi)
 }
 
@@ -42,6 +45,8 @@ func checkDone(isDone *bool){
 		} else{
 			data := url.Values{}
 			data.Set("message", status[:len(status)-1])
+			enc,_ := ioutil.ReadFile("./user.info")
+			data.Add("person", string(enc))
 			resp, err := http.PostForm("http://localhost:8080/send", data)
 			err=err
 			defer resp.Body.Close()
@@ -58,8 +63,9 @@ func encPerson(boi Person) []byte{
 }
 func decPerson(enc []byte) Person{
 	var boi Person
-	dec := gob.NewDecoder(&enc)
-	err = dec.Decode(&boi)
+	dec := gob.NewDecoder(bytes.NewReader(enc))
+	err := dec.Decode(&boi)
+	err=err
 	return boi
 }
 
