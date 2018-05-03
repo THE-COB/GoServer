@@ -54,26 +54,27 @@ func checkDone(isDone *bool){
 	}
 }
 
-func getMessagae() Message{
+func getMessagae() string{
 	resp, err := http.Get("http://localhost:8080")
 	if(err != nil){
 		fmt.Println(err)
 	}
 	defer resp.Body.Close()
-	message := Message{};
-	body, err := ioutil.ReadAll(resp.Body)
-	err = json.Unmarshal(body, &message)
+	var message string
+	json.NewDecoder(resp.Body).Decode(message)
+	fmt.Println(message)
 	return message
 }
 
 func printMess(d time.Duration){
-	var lastMessage Message
+	var lastMessage string
 	for true{
 		time.Sleep(d)
 		mess := getMessagae()
-		if(mess.Sender.Name != lastMessage.Sender.Name){
+		if(true){
 			lastMessage = mess
-			fmt.Println(mess.Text)
+			lastMessage=lastMessage
+			fmt.Println(mess)
 		}
 
 	}
