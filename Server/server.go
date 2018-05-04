@@ -4,18 +4,19 @@ import(
 	"fmt";
 	"net/http";
 	"encoding/json";
-	"time"
+	"time";
 )
 
 type Message struct{
-	text string
-	person []string
-	time string
+	Text string
+	Person []string
+	Time string
 }
 var mess Message
 
 func speak(w http.ResponseWriter, r *http.Request){
-	json.NewEncoder(w).Encode(mess)
+	b, _ := json.Marshal(mess)
+	w.Write(b)
 }
 
 func send(w http.ResponseWriter, r *http.Request){

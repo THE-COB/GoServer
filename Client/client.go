@@ -61,8 +61,9 @@ func getMessagae() string{
 	}
 	defer resp.Body.Close()
 	var message string
-	json.NewDecoder(resp.Body).Decode(message)
-	fmt.Println(message)
+	var mess []byte
+	json.Unmarshal(mess, resp.Body)
+	fmt.Println(mess)
 	return message
 }
 
