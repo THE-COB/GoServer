@@ -12,6 +12,12 @@ type Message struct{
 	TimeSent time.Time
 }
 
+type BasicMessage struct{
+	Text string
+	Person []string
+	Time string
+}
+
 type Person struct{
 	Name string
 	Id [32]byte
@@ -30,7 +36,7 @@ func decP(enc []byte) Person{
 	dec := gob.NewDecoder(bytes.NewReader(enc))
 	err := dec.Decode(&boi)
 	err=err
-	boi.Name = boi.Name[:len(boi.Name)-1]
+	boi.Name = boi.Name[:len(boi.Name)]
 	return boi
 }
 func decM(enc []byte) Message{
