@@ -23,7 +23,7 @@ func getPerson() Person{
 		fmt.Println("It seems that you don't exist yet\nWhat is your name?")
 		reader := bufio.NewReader(os.Stdin)
 		name,_ := reader.ReadString('\n')
-		ourBoi := Person{name, sha256.Sum256([]byte(name+string(rand.Intn(100))))}
+		ourBoi := Person{name, sha256.Sum256([]byte(time.Now().String()+name+string(rand.Intn(100))))}
 
 		err = ioutil.WriteFile("./user.info", enc(ourBoi),'\n')
 	}
@@ -65,7 +65,8 @@ func getMessagae() Message{
 	json.Unmarshal(body, &bMessage)
 	fmt.Println(bMessage)
 	time,_ := time.Parse(time.RFC3339 ,bMessage.Time)
-	message := Message{decP([]byte(bMessage.Person[1])), bMessage.Text, time}
+	p := Person{}
+	message := Message{p, bMessage.Text, time}
 	fmt.Println(message)
 	return message
 }
