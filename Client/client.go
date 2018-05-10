@@ -46,7 +46,7 @@ func checkDone(isDone *bool){
 			data.Add("sender", p.Name)
 			data.Add("sender", string(p.Id[:32]))
 			data.Set("message", status[:len(status)-1])
-			data.Set("time", time.Now().String())
+			data.Set("time", time.Now().Format(time.RFC3339))
 			resp, err := http.PostForm("http://localhost:8080/send", data)
 			err=err
 			defer resp.Body.Close()
@@ -64,7 +64,7 @@ func getMessagae() Message{
 	body, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(body, &bMessage)
 	fmt.Println(bMessage)
-	time,_ := time.Parse("ANSIC" ,bMessage.Time)
+	time,_ := time.Parse(time.RFC3339 ,bMessage.Time)
 	message := Message{decP([]byte(bMessage.Person[1])), bMessage.Text, time}
 	fmt.Println(message)
 	return message
