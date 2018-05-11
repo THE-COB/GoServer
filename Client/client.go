@@ -40,7 +40,11 @@ func checkDone(isDone *bool){
 		} else if(status == "/t\n"){
 			fmt.Println(mess.TimeSent)
 		} else if(status == "/clear\n"){
-			exec.Command("clear")
+			cmd := exec.Command("clear")
+			cmd.Stdout = os.Stdout
+			cmd.Run()
+			cmd = exec.Command("cmd", "/c", "cls")
+			cmd.Run()
 		} else{
 			p := getPerson()
 			data := url.Values{}
