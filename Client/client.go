@@ -17,15 +17,13 @@ import(
 func getPerson() Person{
 	_,noFile := os.Stat("./user.info")
 	if noFile != nil{
-		newFile,err := os.Create("./user.info")
-		newFile=newFile
-		fmt.Println(err)
+		os.Create("./user.info")
 		fmt.Println("It seems that you don't exist yet\nWhat is your name?")
 		reader := bufio.NewReader(os.Stdin)
 		name,_ := reader.ReadString('\n')
 		ourBoi := Person{name, sha256.Sum256([]byte(time.Now().String()+name+string(rand.Intn(100))))}
 
-		err = ioutil.WriteFile("./user.info", enc(ourBoi),'\n')
+		ioutil.WriteFile("./user.info", enc(ourBoi),'\n')
 	}
 	encBoi,err := ioutil.ReadFile("./user.info")
 	err=err
@@ -43,7 +41,7 @@ func checkDone(isDone *bool){
 		} else{
 			p := getPerson()
 			data := url.Values{}
-			data.Add("sender", p.Name)
+			data.Add("sender", p.Name[:len(p.Name)-1])
 			data.Add("sender", string(p.Id[:32]))
 			data.Set("message", status[:len(status)-1])
 			data.Set("time", time.Now().Format(time.RFC3339))
@@ -63,23 +61,21 @@ func getMessagae() Message{
 	var bMessage BasicMessage
 	body, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(body, &bMessage)
-	fmt.Println(bMessage)
 	time,_ := time.Parse(time.RFC3339 ,bMessage.Time)
-	p := Person{}
+	p := Person{bMessage.Name, bMessage.Id}
 	message := Message{p, bMessage.Text, time}
-	fmt.Println(message)
 	return message
 }
 
 func printMess(d time.Duration){
 	var lastMessage Message
+	fmt.Println(getMessagae().Text)
 	for true{
 		time.Sleep(d)
 		mess := getMessagae()
-		if(lastMessage.TimeSent != mess.TimeSent){
+		if(lastMessage.TimeSent != mess.TimeSent && mess.Sender.Id != getPerson().Id){
 			lastMessage = mess
-			lastMessage=lastMessage
-			fmt.Println(mess.Text)
+			fmt.Println("\t"+mess.Sender.Name+": "+mess.Text)
 		}
 
 	}

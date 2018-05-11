@@ -9,7 +9,8 @@ import(
 
 type Message struct{
 	Text string
-	Person []string
+	Name string
+	Id [32]byte
 	Time string
 }
 var mess Message
@@ -23,13 +24,15 @@ func send(w http.ResponseWriter, r *http.Request){
 	if(r.Method == "POST"){
 		r.ParseForm()
 		vals := r.PostForm
-		mess = Message{vals["message"][0],vals["sender"],vals["time"][0]}
+		var pId [32]byte
+		copy(pId[:], vals["sender"][1])
+		mess = Message{vals["message"][0],vals["sender"][0],pId,vals["time"][0]}
 	}
 }
 
 func main() {
-	pers := []string{"ServerAdmin", "0"}
-	mess = Message{"Welcome to Chat on the Go!",pers,time.Now().String()}
+	var id [32]byte
+	mess = Message{"Welcome to Chat on the Go!","ServerAdmin",id,time.Now().String()}
 	http.HandleFunc("/", speak)
 	http.HandleFunc("/send", send)
 	fmt.Println("Everything is working and ready...")

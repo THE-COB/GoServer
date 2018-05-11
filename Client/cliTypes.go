@@ -11,10 +11,10 @@ type Message struct{
 	Text string
 	TimeSent time.Time
 }
-
 type BasicMessage struct{
 	Text string
-	Person []string
+	Name string
+	Id [32]byte
 	Time string
 }
 
