@@ -5,7 +5,7 @@ import(
 	"net/http";
 	"net/url";
 	"os";
-	"os/exec"
+	"os/exec";
 	"bufio";
 	"io/ioutil";
 	"time";
@@ -30,13 +30,16 @@ func getPerson() Person{
 	return decP(encBoi)
 }
 
+var mess Message
 func checkDone(isDone *bool){
 	reader := bufio.NewReader(os.Stdin)
 	for true{
 		status, _ := reader.ReadString('\n')
 		if(status == "0\n"){
 			*isDone = true
-		} else if(status == "clear\n"){
+		} else if(status == "/t\n"){
+			fmt.Println(mess.TimeSent)
+		} else if(status == "/clear\n"){
 			exec.Command("clear")
 		} else{
 			p := getPerson()
@@ -68,11 +71,11 @@ func getMessagae() Message{
 }
 
 func printMess(d time.Duration){
-	var lastMessage Message
 	fmt.Println(getMessagae().Text)
+	var lastMessage Message
 	for true{
 		time.Sleep(d)
-		mess := getMessagae()
+		mess = getMessagae()
 		if(lastMessage.TimeSent != mess.TimeSent && mess.Sender.Id != getPerson().Id){
 			lastMessage = mess
 			fmt.Println("\t"+mess.Sender.Name+": "+mess.Text)
