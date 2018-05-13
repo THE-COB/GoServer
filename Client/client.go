@@ -15,7 +15,8 @@ import(
 )
 
 func getPerson() Person{
-	_,noFile := os.Stat("./user.info")
+	err,noFile := os.Stat("./user.info")
+	err = err
 	if noFile != nil{
 		os.Create("./user.info")
 		fmt.Println("It seems that you don't exist yet\nWhat is your name?")
@@ -25,8 +26,7 @@ func getPerson() Person{
 
 		ioutil.WriteFile("./user.info", enc(ourBoi),'\n')
 	}
-	encBoi,err := ioutil.ReadFile("./user.info")
-	err=err
+	encBoi,_ := ioutil.ReadFile("./user.info")
 	return decP(encBoi)
 }
 

@@ -27,6 +27,7 @@ func send(w http.ResponseWriter, r *http.Request){
 		var pId [32]byte
 		copy(pId[:], vals["sender"][1])
 		mess = Message{vals["message"][0],vals["sender"][0],pId,vals["time"][0]}
+		fmt.Println(mess.Name+": "+mess.Text+"\n"+mess.Time+"\n")
 	}
 }
 
