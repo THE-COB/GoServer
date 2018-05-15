@@ -13,7 +13,7 @@ import(
 	"math/rand";
 	"encoding/json"
 )
-
+var servUrl string
 func getPerson() Person{
 	err,noFile := os.Stat("./user.info")
 	err = err
@@ -52,7 +52,7 @@ func checkDone(isDone *bool){
 			data.Add("sender", string(p.Id[:32]))
 			data.Set("message", status[:len(status)-1])
 			data.Set("time", time.Now().Format(time.RFC3339))
-			resp, err := http.PostForm("http://localhost:8080/send", data)
+			resp, err := http.PostForm(servUrl+"/send", data)
 			err=err
 			defer resp.Body.Close()
 		}
@@ -60,7 +60,7 @@ func checkDone(isDone *bool){
 }
 
 func getMessagae() Message{
-	resp, err := http.Get("http://localhost:8080")
+	resp, err := http.Get(servUrl)
 	if(err != nil){
 		fmt.Println(err)
 	}
@@ -89,6 +89,12 @@ func printMess(d time.Duration){
 }
 
 func main(){
+	if(len(os.Args) == 1){
+		servUrl = "http://localhost:8080"
+	} else{
+		servUrl = "http://"+os.Args[1]+":8080"
+	}
+	fmt.Println(servUrl)
 	isDone := false
 	go printMess(1*time.Second)
 	go checkDone(&isDone)
