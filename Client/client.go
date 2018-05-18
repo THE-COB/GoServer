@@ -43,7 +43,7 @@ func checkDone(isDone *bool){
 			cmd := exec.Command("clear")
 			cmd.Stdout = os.Stdout
 			cmd.Run()
-			cmd = exec.Command("cmd", "/c", "cls")
+			cmd = exec.Command("cls")
 			cmd.Run()
 		} else{
 			p := getPerson()
